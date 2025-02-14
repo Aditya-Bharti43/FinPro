@@ -1,5 +1,8 @@
 import 'package:fin_pro_new/add_expense_screen.dart';
 import 'package:fin_pro_new/add_income_screen.dart';
+import 'package:fin_pro_new/display_balance_screen.dart';
+import 'package:fin_pro_new/display_expense_screen.dart';
+import 'package:fin_pro_new/display_income_screen.dart';
 import 'package:fin_pro_new/doughnut_chart_example.dart';
 import 'package:fin_pro_new/expense_card_edu.dart';
 import 'package:fin_pro_new/expense_records.dart';
@@ -274,8 +277,14 @@ class _DashboardState extends State<Dashboard> {
             ),
             Divider(),
             ListTile(
-              leading: Icon(Icons.logout,color: Colors.red,),
-              title: Text("Logout",style: GoogleFonts.poppins(color: Colors.white,fontWeight: FontWeight.w400),),
+              leading: Icon(Icons.logout, color: Colors.red),
+              title: Text(
+                "Logout",
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 // Logout Functionality
@@ -388,37 +397,49 @@ class _DashboardState extends State<Dashboard> {
           Positioned(
             top: screenHeight * 0.12,
             left: screenWidth * 0.05,
-            child: Container(
-              height: screenHeight * 0.13,
-              width: screenWidth * 0.3,
-              child: Card(
-                color: Colors.grey[900],
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Total Income',
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 12,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            DisplayIncomeScreen(income: formattedIncome),
+                  ),
+                );
+              },
+              child: Container(
+                height: screenHeight * 0.13,
+                width: screenWidth * 0.3,
+                child: Card(
+                  color: Colors.grey[900],
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Total Income',
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                        Text(
-                          formattedIncome,
-                          style: GoogleFonts.poppins(
-                            color: Colors.blue,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                          Text(
+                            formattedIncome,
+                            style: GoogleFonts.poppins(
+                              color: Colors.blue,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -431,37 +452,49 @@ class _DashboardState extends State<Dashboard> {
             top: screenHeight * 0.12,
             left: screenWidth * 0.35,
             // right: screenWidth * 0.05,
-            child: Container(
-              height: screenHeight * 0.13,
-              width: screenWidth * 0.3,
-              child: Card(
-                color: Colors.grey[900],
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Total Expense',
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 12,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            DisplayExpenseScreen(expense: formattedExpense),
+                  ),
+                );
+              },
+              child: Container(
+                height: screenHeight * 0.13,
+                width: screenWidth * 0.3,
+                child: Card(
+                  color: Colors.grey[900],
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Total Expense',
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                        Text(
-                          formattedExpense,
-                          style: GoogleFonts.poppins(
-                            color: Colors.red,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                          Text(
+                            formattedExpense,
+                            style: GoogleFonts.poppins(
+                              color: Colors.red,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -473,37 +506,51 @@ class _DashboardState extends State<Dashboard> {
           Positioned(
             top: screenHeight * 0.12,
             left: screenWidth * 0.65,
-            child: Container(
-              height: screenHeight * 0.13,
-              width: screenWidth * 0.3,
-              child: Card(
-                color: Colors.grey[900],
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Avl Balance',
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => DisplayBalanceScreen(
+                          balance: formattedBalance,
+                          col_or: avlBal >= 0,
                         ),
-                        Text(
-                          formattedBalance,
-                          style: GoogleFonts.poppins(
-                            color: avlBal >= 0 ? Colors.green : Colors.red,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                  ),
+                );
+              },
+              child: Container(
+                height: screenHeight * 0.13,
+                width: screenWidth * 0.3,
+                child: Card(
+                  color: Colors.grey[900],
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Avl Balance',
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ],
+                          Text(
+                            formattedBalance,
+                            style: GoogleFonts.poppins(
+                              color: avlBal >= 0 ? Colors.green : Colors.red,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

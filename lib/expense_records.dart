@@ -36,6 +36,7 @@ class _ExpenseRecordsState extends State<ExpenseRecords> {
       body: Column(
         children: [
           // Header
+          SizedBox(height: screenHeight*0.05,),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Card(
@@ -78,17 +79,17 @@ class _ExpenseRecordsState extends State<ExpenseRecords> {
             child: Stack(
               children: [
                 Positioned(
-                  top: screenHeight * 0.2,
+                  top: screenHeight * 0.01,
                   left: screenWidth * 0.05,
                   child: Card(
-                    color: const Color.fromARGB(255, 136, 128, 128),
+                    color: Colors.grey[900],
                     margin: EdgeInsets.only(bottom: 16),
                     child: Container(
                       width: screenWidth * 0.9,
-                      height: screenHeight * 0.36,
+                      height: screenHeight * 0.8,
                       padding: EdgeInsets.all(16),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
                             'Transactions',
