@@ -22,10 +22,13 @@ class _LandingPageState extends State<LandingPage> {
         Positioned(
           top: screenHeight * 0.1,
           left: screenWidth * 0.34,
-          child: Text(
-            'FinPro',
-            style: GoogleFonts.poppins(
-                fontSize: 32, fontWeight: FontWeight.w700, color: Colors.white),
+          child: ShaderMask(
+            shaderCallback: (bounds) => LinearGradient(colors: [Colors.blueAccent, Colors.tealAccent]).createShader(bounds),
+            child: Text(
+              'FinPro',
+              style: GoogleFonts.poppins(
+                  fontSize: 32, fontWeight: FontWeight.w700, color: Colors.white),
+            ),
           ),
         ),
         // buttons Login,signin
@@ -45,9 +48,16 @@ class _LandingPageState extends State<LandingPage> {
                   .push(MaterialPageRoute(builder: (context) => LoginScreen()));
             },
             // onHover: ,
-            child: Text(
-              'Login',
-              style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+            child: ShaderMask(
+              shaderCallback: (bounds) => LinearGradient(
+                colors: [Colors.orangeAccent, Colors.pinkAccent],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ).createShader(bounds),
+              child: Text(
+                'Login',
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+              ),
             ),
           ),
         ),
@@ -65,9 +75,16 @@ class _LandingPageState extends State<LandingPage> {
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => SignInScreen()));
             },
-            child: Text(
-              'Sign In',
-              style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+            child: ShaderMask(
+              shaderCallback: (bounds) => LinearGradient(
+                colors: [Colors.orangeAccent, Colors.pinkAccent],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ).createShader(bounds),
+              child: Text(
+                'Sign In',
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+              ),
             ),
           ),
         ),

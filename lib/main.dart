@@ -31,10 +31,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      // home: LandingPage()
+      home: LandingPage()
       // home: LoginScreen(),
       // home: SignInScreen(),
-      home: Dashboard(),
+      // home: Dashboard(),
       // home: AddIncomeScreen(),
       // home:ExpenseCardFood()
       // home: ExpenseCardEdu(),

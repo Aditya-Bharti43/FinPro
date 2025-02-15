@@ -21,12 +21,17 @@ class _SignInScreenState extends State<SignInScreen> {
           Positioned(
             top: screenHeight * 0.1,
             left: screenWidth * 0.4,
-            child: Text(
-              "SignIn",
-              style: GoogleFonts.poppins(
-                fontSize: 32,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
+            child: ShaderMask(
+              shaderCallback: (bounds) => LinearGradient(
+                colors: [Colors.blueAccent, Colors.tealAccent],
+              ).createShader(bounds),
+              child: Text(
+                "SignIn",
+                style: GoogleFonts.poppins(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
@@ -152,9 +157,16 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               onPressed: () {},
               // onHover: ,
-              child: Text(
-                'SignIn',
-                style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+              child: ShaderMask(
+                shaderCallback: (bounds) => LinearGradient(
+                  colors: [Colors.orangeAccent, Colors.pinkAccent],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ).createShader(bounds),
+                child: Text(
+                  'SignIn',
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                ),
               ),
             ),
           ),

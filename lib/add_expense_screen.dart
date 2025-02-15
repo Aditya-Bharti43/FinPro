@@ -32,12 +32,19 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           Positioned(
             top: screenHeight * 0.1,
             left: screenWidth * 0.3,
-            child: Text(
-              "Add Expense",
-              style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white),
+            child: ShaderMask(
+              shaderCallback:(bounds)=>LinearGradient(
+                colors: [Colors.blueAccent,Colors.purpleAccent],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ).createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
+              child: Text(
+                "Add Expense",
+                style: GoogleFonts.poppins(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white),
+              ),
             ),
           ),
           // 01.// cross and tick buttons for creating or discarding records

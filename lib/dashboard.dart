@@ -7,6 +7,7 @@ import 'package:fin_pro_new/doughnut_chart_example.dart';
 import 'package:fin_pro_new/expense_card_edu.dart';
 import 'package:fin_pro_new/expense_records.dart';
 import 'package:fin_pro_new/expense_screen.dart';
+import 'package:fin_pro_new/help_finbuddy.dart';
 import 'package:fin_pro_new/income_screen.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,12 @@ class _DashboardState extends State<Dashboard> {
         .where((transaction) => transaction['type'] == 'income')
         .map((transaction) => double.parse(transaction['amount']!))
         .fold(0.0, (sum, amount) => sum + amount);
+  }
+
+  void _deleteTransaction(int index) {
+    setState(() {
+      transactions.removeAt(index);
+    });
   }
 
   double getTotalExpense() {
@@ -74,9 +81,16 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text(
-          'Dashboard',
-          style: GoogleFonts.poppins(color: Colors.white),
+        title: ShaderMask(
+          shaderCallback:
+              (bounds) => LinearGradient(
+                colors: [Colors.blueAccent, Colors.purpleAccent],
+              ).createShader(bounds),
+          child: Text(
+            'Dashboard',
+            style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.w500),
+          ),
+          blendMode: BlendMode.srcIn,
         ),
         backgroundColor: Colors.black,
         leading: Builder(
@@ -101,12 +115,17 @@ class _DashboardState extends State<Dashboard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Menu",
-                    style: GoogleFonts.poppins(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                  ShaderMask(
+                    shaderCallback: (bounds) => LinearGradient(
+                      colors: [Colors.blueAccent, Colors.purpleAccent],
+                    ).createShader(bounds),
+                    child: Text(
+                      "Menu",
+                      style: GoogleFonts.poppins(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   SizedBox(height: 5),
@@ -168,6 +187,7 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       );
 
+                      Navigator.pop(context);
                       if (result != null) {
                         setState(() {
                           transactions.add({
@@ -186,7 +206,7 @@ class _DashboardState extends State<Dashboard> {
                           builder: (context) => AddExpenseScreen(),
                         ),
                       );
-
+                      Navigator.pop(context);
                       if (res != null) {
                         setState(() {
                           transactions.add({
@@ -271,7 +291,11 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HelpScreen()),
+                );
+                // Navigator.pop(context);
                 // Navigate to Settings Screen
               },
             ),
@@ -353,41 +377,63 @@ class _DashboardState extends State<Dashboard> {
                 width: screenWidth * 0.9, // 90% of screen width
                 height: screenHeight * 0.35,
                 padding: EdgeInsets.all(16),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Transactions',
-                        style: GoogleFonts.poppins(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Transactions',
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
-                      SizedBox(height: 8),
-                      ...transactions.map((transaction) {
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 8),
-                          child:
-                              transaction['type'] == 'income'
-                                  ? IncomeCard(
-                                    title: 'Income',
-                                    subtitle: 'Income',
-                                    amount: transaction['amount']!,
-                                    date: transaction['date']!,
-                                  )
-                                  : ExpenseCard(
-                                    title: transaction['category']!,
-                                    subtitle: 'Expense',
-                                    amount: transaction['amount']!,
-                                    date: transaction['date']!,
-                                    iconPath: transaction['iconpath']!,
-                                  ),
-                        );
-                      }).toList(),
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: 8),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: transactions.length,
+                        itemBuilder: (context, index) {
+                          final transaction = transactions[index];
+
+                          return Dismissible(
+                            key: UniqueKey(),
+                            direction: DismissDirection.endToStart,
+                            background: Container(
+                              color: Colors.red,
+                              alignment: Alignment.centerRight,
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                            ),
+                            onDismissed: (direction) {
+                              _deleteTransaction(index);
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 8),
+                              child:
+                                  transaction['type'] == 'income'
+                                      ? IncomeCard(
+                                        title: 'Income',
+                                        subtitle: 'Income',
+                                        amount: transaction['amount']!,
+                                        date: transaction['date']!,
+                                      )
+                                      : ExpenseCard(
+                                        title: transaction['category']!,
+                                        subtitle: 'Expense',
+                                        amount: transaction['amount']!,
+                                        date: transaction['date']!,
+                                        iconPath: transaction['iconpath']!,
+                                      ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
