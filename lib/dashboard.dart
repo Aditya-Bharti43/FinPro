@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:fin_pro_new/add_expense_screen.dart';
 import 'package:fin_pro_new/add_income_screen.dart';
 import 'package:fin_pro_new/display_balance_screen.dart';
@@ -9,10 +10,12 @@ import 'package:fin_pro_new/expense_records.dart';
 import 'package:fin_pro_new/expense_screen.dart';
 import 'package:fin_pro_new/help_finbuddy.dart';
 import 'package:fin_pro_new/income_screen.dart';
+import 'package:fin_pro_new/landing_page.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -26,17 +29,48 @@ class _DashboardState extends State<Dashboard> {
   bool _showTranscationDropdown = false;
   List<Map<String, String>> transactions = []; // List to store the transactions
   // double income=0;
-  double getTotalIncome() {
-    return transactions
-        .where((transaction) => transaction['type'] == 'income')
-        .map((transaction) => double.parse(transaction['amount']!))
-        .fold(0.0, (sum, amount) => sum + amount);
+
+  // Load transactions from shared preferences
+
+  Future<void> loadTransactions() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    List<String>? jsonList = prefs.getStringList('transactions');
+    if (jsonList != null) {
+      transactions =
+          jsonList
+              .map(
+                (jsonStr) =>
+                    Map<String, String>.from(jsonDecode(jsonStr) as Map),
+              )
+              .toList();
+
+      setState(() {});
+    }
+  }
+
+  // saving transactions to shared preferences
+
+  Future<void> saveTransactions() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    List<String> jsonList = transactions.map((tx) => jsonEncode(tx)).toList();
+
+    await prefs.setStringList('transactions', jsonList);
   }
 
   void _deleteTransaction(int index) {
     setState(() {
       transactions.removeAt(index);
+      saveTransactions();
     });
+  }
+
+  double getTotalIncome() {
+    return transactions
+        .where((transaction) => transaction['type'] == 'income')
+        .map((transaction) => double.parse(transaction['amount']!))
+        .fold(0.0, (sum, amount) => sum + amount);
   }
 
   double getTotalExpense() {
@@ -57,6 +91,13 @@ class _DashboardState extends State<Dashboard> {
       }
     }
     return categoryExpenses;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Load saved transactions on startup.
+    loadTransactions();
   }
 
   @override
@@ -88,7 +129,10 @@ class _DashboardState extends State<Dashboard> {
               ).createShader(bounds),
           child: Text(
             'Dashboard',
-            style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.w500),
+            style: GoogleFonts.poppins(
+              fontSize: 24,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           blendMode: BlendMode.srcIn,
         ),
@@ -116,9 +160,10 @@ class _DashboardState extends State<Dashboard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ShaderMask(
-                    shaderCallback: (bounds) => LinearGradient(
-                      colors: [Colors.blueAccent, Colors.purpleAccent],
-                    ).createShader(bounds),
+                    shaderCallback:
+                        (bounds) => LinearGradient(
+                          colors: [Colors.blueAccent, Colors.purpleAccent],
+                        ).createShader(bounds),
                     child: Text(
                       "Menu",
                       style: GoogleFonts.poppins(
@@ -196,6 +241,9 @@ class _DashboardState extends State<Dashboard> {
                             'type': 'income',
                           });
                         });
+
+                        // save after adding
+                        await saveTransactions();
                       }
                     }
 
@@ -217,6 +265,8 @@ class _DashboardState extends State<Dashboard> {
                             'type': 'expense',
                           });
                         });
+                        // save after adding
+                        await saveTransactions();
                       }
                     }
                   },
@@ -310,6 +360,8 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
               onTap: () {
+                // Navigator.push(context, MaterialPageRoute(builder:(context)=>LandingPage()));
+                Navigator.pop(context);
                 Navigator.pop(context);
                 // Logout Functionality
               },
