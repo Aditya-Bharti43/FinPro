@@ -1,5 +1,6 @@
 import 'package:fin_pro_new/add_income_screen.dart';
 import 'package:fin_pro_new/dashboard.dart';
+import 'package:fin_pro_new/expense_bar_cahrt.dart';
 import 'package:fin_pro_new/expense_card_edu.dart';
 import 'package:fin_pro_new/expense_card_entertain.dart';
 import 'package:fin_pro_new/expense_card_food.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
       // home: IncomeScreen(),
       // home: JustCheckScreen(),
       // home: ExpenseRecords(),
+      // home:ExpenseBarChart()
       
 
 

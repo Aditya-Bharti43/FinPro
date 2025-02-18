@@ -5,6 +5,7 @@ import 'package:fin_pro_new/display_balance_screen.dart';
 import 'package:fin_pro_new/display_expense_screen.dart';
 import 'package:fin_pro_new/display_income_screen.dart';
 import 'package:fin_pro_new/doughnut_chart_example.dart';
+import 'package:fin_pro_new/expense_bar_cahrt.dart';
 import 'package:fin_pro_new/expense_card_edu.dart';
 import 'package:fin_pro_new/expense_records.dart';
 import 'package:fin_pro_new/expense_screen.dart';
@@ -16,8 +17,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:audioplayers/audioplayers.dart';
+
 
 class Dashboard extends StatefulWidget {
+  // final username;
   const Dashboard({super.key});
 
   @override
@@ -28,10 +32,21 @@ class _DashboardState extends State<Dashboard> {
   String? _selectedMainCategory;
   bool _showTranscationDropdown = false;
   List<Map<String, String>> transactions = []; // List to store the transactions
-  // double income=0;
+  
+  final AudioPlayer _audioPlayer =AudioPlayer(); 
+  final AudioPlayer _audio_add_player=AudioPlayer();
+  // for playing audio when transactions are added 
+
+ Future<void> playSound() async {
+  await _audioPlayer.play(AssetSource('sounds/trench-club-1-101551.mp3')); // Ensure the file exists in assets
+}
+
+Future<void>playSound_add()async{
+  await _audio_add_player.play(AssetSource('sounds/strange-notification-36458.mp3'));
+}
+
 
   // Load transactions from shared preferences
-
   Future<void> loadTransactions() async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -64,6 +79,7 @@ class _DashboardState extends State<Dashboard> {
       transactions.removeAt(index);
       saveTransactions();
     });
+    playSound();
   }
 
   double getTotalIncome() {
@@ -98,12 +114,19 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     // Load saved transactions on startup.
     loadTransactions();
+
+  
   }
+
+  
+
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+
+    // print("Username: ${widget.username}");
 
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('MMMM dd, yyyy').format(now);
@@ -244,6 +267,7 @@ class _DashboardState extends State<Dashboard> {
 
                         // save after adding
                         await saveTransactions();
+                        playSound_add();
                       }
                     }
 
@@ -267,6 +291,7 @@ class _DashboardState extends State<Dashboard> {
                         });
                         // save after adding
                         await saveTransactions();
+                        playSound_add();
                       }
                     }
                   },
@@ -303,6 +328,29 @@ class _DashboardState extends State<Dashboard> {
                 );
               },
             ),
+
+            ListTile(
+              leading: Icon(Icons.bar_chart, color: Colors.purple),
+              title: Text(
+                'View charts',
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            ExpenseBarChart(transactions: transactions),
+                  ),
+                );
+              },
+            ),
+
             ListTile(
               leading: Icon(Icons.home, color: Colors.blue),
               title: Text(
@@ -373,6 +421,7 @@ class _DashboardState extends State<Dashboard> {
         // header section->includes username,profile pic,date(today fetching dynamically)
         children: [
           // this column is for name and date.
+        
           Positioned(
             top: screenHeight * 0.001,
             left: screenWidth * 0.02,
@@ -386,7 +435,7 @@ class _DashboardState extends State<Dashboard> {
                     Column(
                       children: [
                         Text(
-                          'Username123',
+                          'Aditya Bharti',
                           style: GoogleFonts.poppins(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -405,7 +454,16 @@ class _DashboardState extends State<Dashboard> {
                     SizedBox(width: 130),
                     // profile pic
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) =>
+                                    ExpenseBarChart(transactions: transactions),
+                          ),
+                        );
+                      },
                       icon: Icon(
                         Icons.person_pin,
                         color: Colors.white,
@@ -420,7 +478,7 @@ class _DashboardState extends State<Dashboard> {
 
           // Transactions inside a single long card
           Positioned(
-            top: screenHeight * 0.52,
+            top: screenHeight * 0.55,
             left: screenWidth * 0.05,
             child: Card(
               color: Colors.grey[900],
@@ -660,7 +718,7 @@ class _DashboardState extends State<Dashboard> {
             top: screenHeight * 0.26,
             left: screenWidth * 0.05,
             child: Container(
-              height: screenHeight * 0.25,
+              height: screenHeight * 0.28,
               width: screenWidth * 0.9,
               child: Card(
                 color: Colors.grey[900],

@@ -10,6 +10,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController _txt_controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -49,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: screenHeight * 0.07,
               width: screenWidth * 0.8,
               child: TextField(
+                controller: _txt_controller,
                 decoration: InputDecoration(
                   hintText: "Username",
                   enabledBorder: OutlineInputBorder(
