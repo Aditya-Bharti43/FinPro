@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
             top: screenHeight * 0.3,
             left: screenWidth * 0.12,
             child: Text(
-              "Enter your username",
+              "Enter your email",
               style: GoogleFonts.poppins(fontSize: 14, color: Colors.white),
             ),
           ),
@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: _emailController,
                 // controller: _txt_controller,
                 decoration: InputDecoration(
-                  hintText: "Username",
+                  hintText: "Email",
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.white,
