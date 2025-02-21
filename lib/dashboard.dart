@@ -38,7 +38,7 @@ class _DashboardState extends State<Dashboard> {
   // for playing audio when transactions are added 
 
  Future<void> playSound() async {
-  await _audioPlayer.play(AssetSource('sounds/trench-club-1-101551.mp3')); // Ensure the file exists in assets
+  await _audioPlayer.play(AssetSource('sounds/del_sound.mp3')); // Ensure the file exists in assets
 }
 
 Future<void>playSound_add()async{
@@ -117,9 +117,6 @@ Future<void>playSound_add()async{
 
   
   }
-
-  
-
 
   @override
   Widget build(BuildContext context) {

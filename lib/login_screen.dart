@@ -1,3 +1,4 @@
+import 'package:fin_pro_new/backend/auth_service.dart';
 import 'package:fin_pro_new/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,7 +11,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController _txt_controller = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,15 +28,17 @@ class _LoginScreenState extends State<LoginScreen> {
             top: screenHeight * 0.1,
             left: screenWidth * 0.4,
             child: ShaderMask(
-              shaderCallback: (bounds) => LinearGradient(
-                  colors: [Colors.blueAccent, Colors.tealAccent])
-                  .createShader(bounds),
+              shaderCallback:
+                  (bounds) => LinearGradient(
+                    colors: [Colors.blueAccent, Colors.tealAccent],
+                  ).createShader(bounds),
               child: Text(
                 "Login",
                 style: GoogleFonts.poppins(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white),
+                  fontSize: 32,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
@@ -51,18 +57,22 @@ class _LoginScreenState extends State<LoginScreen> {
               height: screenHeight * 0.07,
               width: screenWidth * 0.8,
               child: TextField(
-                controller: _txt_controller,
+                controller: _emailController,
+                // controller: _txt_controller,
                 decoration: InputDecoration(
                   hintText: "Username",
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: Colors.white,
-                        width: 2), // Border color and width
+                      color: Colors.white,
+                      width: 2,
+                    ), // Border color and width
                     borderRadius: BorderRadius.circular(10), // Rounded corners
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: Colors.blue, width: 2), // Border when focused
+                      color: Colors.blue,
+                      width: 2,
+                    ), // Border when focused
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
@@ -85,17 +95,21 @@ class _LoginScreenState extends State<LoginScreen> {
               height: screenHeight * 0.07,
               width: screenWidth * 0.8,
               child: TextField(
+                controller: _passwordController,
                 decoration: InputDecoration(
                   hintText: "Password",
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: Colors.white,
-                        width: 2), // Border color and width
+                      color: Colors.white,
+                      width: 2,
+                    ), // Border color and width
                     borderRadius: BorderRadius.circular(10), // Rounded corners
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: Colors.blue, width: 2), // Border when focused
+                      color: Colors.blue,
+                      width: 2,
+                    ), // Border when focused
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
@@ -113,19 +127,52 @@ class _LoginScreenState extends State<LoginScreen> {
                 foregroundColor: Colors.white,
                 side: BorderSide(color: Colors.white, width: 2),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Dashboard()));
-              },
+              onPressed:
+                  _isLoading
+                      ? null
+                      : () async {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        String email = _emailController.text.trim();
+                        String password = _passwordController.text.trim();
+
+                        final userCredential = await _authService.login(
+                          email,
+                          password,
+                        );
+
+                        setState(() {
+                          _isLoading = false;
+                        });
+                        if (userCredential != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Dashboard(),
+                            ),
+                          );
+                        } else {
+                          // Display error message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Login failed. Please try again.'),
+                            ),
+                          );
+                        }
+                        
+                      },
               // onHover: ,
               child: ShaderMask(
-                shaderCallback: (bounds) => LinearGradient(
-                  colors: [Colors.orangeAccent, Colors.pinkAccent],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ).createShader(bounds),
+                shaderCallback:
+                    (bounds) => LinearGradient(
+                      colors: [Colors.orangeAccent, Colors.pinkAccent],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ).createShader(bounds),
                 child: Text(
                   'Login',
                   style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
@@ -133,6 +180,15 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
+
+          // Loading Overlay
+          if (_isLoading)
+            Container(
+              color: Colors.black.withOpacity(0.5),
+              child: Center(
+                child: CircularProgressIndicator(color: Colors.orangeAccent),
+              ),
+            ),
         ],
       ),
     );

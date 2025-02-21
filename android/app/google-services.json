@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "721509314048",
+    "project_id": "finpro-84832",
+    "storage_bucket": "finpro-84832.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:721509314048:android:351c5722d93351acaaf2e5",
+        "android_client_info": {
+          "package_name": "com.example.fin_pro_new"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgsu2dUSsoNAfrqH-ZQEJ9mAfKgL1-y-Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
