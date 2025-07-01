@@ -363,20 +363,6 @@ Future<void>playSound_add()async{
               },
             ),
             ListTile(
-              leading: Icon(Icons.settings, color: Colors.amber),
-              title: Text(
-                "Settings",
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                // Navigate to Settings Screen
-              },
-            ),
-            ListTile(
               leading: Icon(Icons.question_mark_rounded, color: Colors.cyan),
               title: Text(
                 "Help",
@@ -405,10 +391,7 @@ Future<void>playSound_add()async{
                 ),
               ),
               onTap: () {
-                // Navigator.push(context, MaterialPageRoute(builder:(context)=>LandingPage()));
-                Navigator.pop(context);
-                Navigator.pop(context);
-                // Logout Functionality
+                Navigator.push(context, MaterialPageRoute(builder:(context)=>LandingPage()));
               },
             ),
           ],
@@ -557,7 +540,8 @@ Future<void>playSound_add()async{
                   MaterialPageRoute(
                     builder:
                         (context) =>
-                            DisplayIncomeScreen(income: formattedIncome),
+                            // DisplayIncomeScreen(income: formattedIncome),
+                            DisplayIncomeScreen(income: formattedIncome,)
                   ),
                 );
               },

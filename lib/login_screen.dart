@@ -3,6 +3,13 @@ import 'package:fin_pro_new/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+class Pair<A, B> {
+  final A first;
+  final B second;
+
+  Pair(this.first, this.second);
+}
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -15,6 +22,53 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final AuthService _authService = AuthService();
   bool _isLoading = false;
+
+  // function for checking the password validity
+
+  Pair<bool, String> isPasswordValid(String password) {
+    if (password.length < 6) return Pair(false, 'length');
+    bool has_upper = false;
+    bool has_lower = false;
+    bool has_digit = false;
+    bool hasSpecial = false;
+
+    for (int i = 0; i < password.length; i++) {
+      String char = password[i];
+
+      if (char.contains(RegExp(r'[A-Z]'))) {
+        has_upper = true;
+      } else if (char.contains(RegExp(r'[a-z]'))) {
+        has_lower = true;
+      } else if (char.contains(RegExp(r'\d'))) {
+        has_digit = true;
+      }
+      if (char.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+        hasSpecial = true;
+      }
+    }
+
+    if (!has_upper) return Pair(false, 'upper');
+    if (!has_lower) return Pair(false, 'lower');
+    if (!has_digit) return Pair(false, 'digit');
+    if (!hasSpecial) return Pair(false, 'special');
+
+    return Pair(true, 'Passed all validations');
+  }
+
+  // logic for email validation basic
+  bool isValidEmail(String email) {
+    if (!email.contains('@') || !email.contains('.')) return false;
+
+    int atIndex = email.indexOf('@');
+    int dotIndex = email.lastIndexOf('.');
+
+    // Basic rule: @ must be before ., and not at start or end
+    if (atIndex < 1 || dotIndex < atIndex + 2 || dotIndex >= email.length - 1) {
+      return false;
+    }
+
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +111,9 @@ class _LoginScreenState extends State<LoginScreen> {
               height: screenHeight * 0.07,
               width: screenWidth * 0.8,
               child: TextField(
+                style:TextStyle(color: Colors.white),
                 controller: _emailController,
-                // controller: _txt_controller,
+                
                 decoration: InputDecoration(
                   hintText: "Email",
                   enabledBorder: OutlineInputBorder(
@@ -95,7 +150,9 @@ class _LoginScreenState extends State<LoginScreen> {
               height: screenHeight * 0.07,
               width: screenWidth * 0.8,
               child: TextField(
+                style:TextStyle(color: Colors.white),
                 controller: _passwordController,
+                obscureText:true,
                 decoration: InputDecoration(
                   hintText: "Password",
                   enabledBorder: OutlineInputBorder(
@@ -140,30 +197,74 @@ class _LoginScreenState extends State<LoginScreen> {
                         String email = _emailController.text.trim();
                         String password = _passwordController.text.trim();
 
-                        final userCredential = await _authService.login(
-                          email,
-                          password,
-                        );
+                        // password should have one uppercase , one lowercase , one number and one special character
 
-                        setState(() {
-                          _isLoading = false;
-                        });
-                        if (userCredential != null) {
-                          Navigator.push(
+                        bool chck = isPasswordValid(password).first;
+                        String str = isPasswordValid(password).second;
+
+                        if (!chck) {
+                          setState(() {
+                            _isLoading=false;
+                          });
+                          String message =
+                              {
+                                'upper':
+                                    'Password should contain at least one uppercase letter',
+                                'lower':
+                                    'Password should contain at least one lowercase letter',
+                                'digit':
+                                    'Password should contain at least one digit',
+                                'special':
+                                    'Password should contain at least one special character',
+                                'length':
+                                    'Password should be at least 6 characters long',
+                              }[str] ??
+                              'Invalid password';
+
+                          ScaffoldMessenger.of(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => Dashboard(),
-                            ),
-                          );
-                        } else {
-                          // Display error message
+                          ).showSnackBar(SnackBar(content: Text(message)));
+                          print(str);
+                        }
+
+                        bool val_email = isValidEmail(email);
+
+                        if (!val_email) {
+                          setState(() {
+                            _isLoading=false;
+                          });
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Login failed. Please try again.'),
-                            ),
+                            const SnackBar(content: Text('Invalid email')),
                           );
                         }
-                        
+
+                        if (chck && val_email) {
+                          final userCredential = await _authService.login(
+                            email,
+                            password,
+                          );
+
+                          setState(() {
+                            _isLoading = false;
+                          });
+                          if (userCredential != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Dashboard(),
+                              ),
+                            );
+                          } else {
+                            // Display error message
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Login failed. Please try again.',
+                                ),
+                              ),
+                            );
+                          }
+                        }
                       },
               // onHover: ,
               child: ShaderMask(

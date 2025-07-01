@@ -11,6 +11,7 @@ import 'package:fin_pro_new/firebase_options.dart';
 import 'package:fin_pro_new/income_screen.dart';
 import 'package:fin_pro_new/just_check_screen.dart';
 import 'package:fin_pro_new/landing_page.dart';
+import 'package:fin_pro_new/loading_animation.dart';
 import 'package:fin_pro_new/login_screen.dart';
 import 'package:fin_pro_new/sign_in_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -38,7 +39,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: LandingPage()
+      // home: LandingPage()
+      home: LoadingAnimation(),
       // home: LoginScreen(),
       // home: SignInScreen(),
       // home: Dashboard(),

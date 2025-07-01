@@ -28,4 +28,21 @@ class AuthService {
       return null;
     }
   }
+
+  Future<bool> checkIfEmailExists(String email) async {
+  try {
+    var methods =
+        await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+    if (methods.isNotEmpty) {
+      print("Email already exists.");
+      return true;
+    } else {
+      print("Email is available.");
+      return false;
+    }
+  } catch (e) {
+    print("Error checking email: $e");
+    return false;
+  }
+}
 }
